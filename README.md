@@ -3,6 +3,10 @@
 Interaktives Dashboard zur Analyse von E-Commerce-Verkaufsdaten.
 Erstellt mit **Python, Pandas, Plotly und Streamlit**.
 
+## 🌍 Online-Demo
+👉 https://ecommercedashoard.streamlit.app
+
+
 ## 🚀 Features
 - Jahresumsatz & KPI-Übersicht
 - Umsatzentwicklung im Jahresvergleich
