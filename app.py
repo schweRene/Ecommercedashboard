@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-import locale
+
 
 def load_data():
     file_path = "ecommerce_sales.csv"
@@ -93,30 +93,47 @@ def create_umsatz_anteil_chart(df, selected_year):
     return fig
 
 def create_monatsanalyse_chart(df, selected_year):
-    locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
+    
+    # Daten für ausgewähltes Jahr
     df_year = df[df['order_date'].dt.year == selected_year].copy()
 
-    df_year['Monat'] = df_year['order_date'].dt.strftime('%B')
-    df_year = df_year.sort_values('order_date')
+    # Monatsnummer (nur für Sortierung, NICHT sichtbar)
+    df_year['monat_num'] = df_year['order_date'].dt.month
 
-    #Umsatz pro Monat und Kategorie
-    cat_monthly = df_year.groupby(['Monat', 'category'], sort=False)['total_amount'].sum().reset_index()
+    # Deutsche Monatsnamen (explizit, ohne locale)
+    monate_de = {
+        1: "Januar", 2: "Februar", 3: "März", 4: "April",
+        5: "Mai", 6: "Juni", 7: "Juli", 8: "August",
+        9: "September", 10: "Oktober", 11: "November", 12: "Dezember"
+    }
 
-    #Stapeldiagramm für Kategorien pro Monat
+    # Deutscher Monatsname
+    df_year['Monat'] = df_year['monat_num'].map(monate_de)
+
+    # Umsatz pro Monat und Kategorie (korrekt sortiert)
+    cat_monthly = (
+        df_year
+        .groupby(['monat_num', 'Monat', 'category'])['total_amount']
+        .sum()
+        .reset_index()
+        .sort_values('monat_num')
+    )
+
+    # Stapeldiagramm
     fig = px.bar(
         cat_monthly,
         x='Monat',
         y='total_amount',
-        color='category', # Jede Kategorie bekommt eine eigene Farbe
+        color='category',
         title=f"<b>Monatlicher Umsatz nach Kategorien ({selected_year})</b>",
         template="plotly_white",
         barmode='stack',
-        color_discrete_sequence=px.colors.qualitative.Prism # Bunte, unterscheidbare Farben
+        color_discrete_sequence=px.colors.qualitative.Prism
     )
 
     fig.update_layout(
         separators=",.",
-        font=dict(color='#000000', family="Arial"), # Alles schwarz
+        font=dict(color='#000000', family="Arial"),
         title_font=dict(color='#000000', size=22),
         xaxis=dict(
             title=None,
@@ -130,7 +147,7 @@ def create_monatsanalyse_chart(df, selected_year):
         ),
         legend=dict(
             title=dict(text="<b>Kategorie</b>", font=dict(color='#000000')),
-            font=dict(color='#000000'), # Legendentext in schwarz
+            font=dict(color='#000000'),
             orientation="v",
             yanchor="middle",
             y=0.5,
@@ -141,6 +158,7 @@ def create_monatsanalyse_chart(df, selected_year):
     )
 
     return fig
+
 
 def main():
     st.set_page_config(page_title="E-Commerce Dashboard", layout="wide")
