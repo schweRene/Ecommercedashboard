@@ -66,7 +66,7 @@ def create_year_vergleich_chart(df):
     )
     fig.update_layout(
         separators=",.", paper_bgcolor='white', plot_bgcolor='white',
-        font=dict(color='#000000', family="Arial"), title_font=dict(color='#000000', size=22),
+        font=dict(color='#000000', family="Arial"), title_font=dict(color='#000000', size=16),
         xaxis=dict(type='category', title=None, tickfont=dict(color='#000000', size=13), linecolor='#000000'),
         yaxis=dict(showgrid=True, gridcolor='lightgray', title=None, tickformat=",.0f", tickfont=dict(color='#000000', size=13)),
         margin=dict(t=60, l=10, r=10, b=10)
@@ -134,7 +134,7 @@ def create_monatsanalyse_chart(df, selected_year):
     fig.update_layout(
         separators=",.",
         font=dict(color='#000000', family="Arial"),
-        title_font=dict(color='#000000', size=22),
+        title_font=dict(color='#000000', size=16),
         xaxis=dict(
             title=None,
             tickfont=dict(color='#000000', size=12),
@@ -224,7 +224,7 @@ def main():
         ]], 
         hide_index=True, 
         use_container_width=True,
-        height="content", # Zeigt alle 20 Zeilen direkt an
+        height="content", 
         column_config={
             "order_date": st.column_config.DateColumn("Datum", format="DD.MM.YYYY"),
             "category": "Kategorie",
